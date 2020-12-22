@@ -3,16 +3,13 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const pify = require('pify');
-const cors = require('cors');
-const JWT = require('jsonwebtoken');
-
 const JWT = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Users = require('../models/Users');
-
 const JWTsecret = process.env.JWT_KEY;
 const { data_notfound, validasi, authorized, respone_ok_data } = require('../helper/http_response');
 const Users = require('../models/Users');
+
+dotenv.config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -41,20 +38,22 @@ const upload = pify(
 
 exports.createuser = async (req, res, next) => {
   try {
+    // upload file in cloudinary
     await upload(req, res);
     const { path } = req.file;
-    const upload_preset = 'uploader';
+    const uploadPreset = 'upload_preset';
 
     const getUrl = async () => {
       let data;
-      await cloudinary.uploader.unsigned_upload(path, upload_preset, (err, result) => {
+      await cloudinary.uploader.unsigned_upload(path, uploadPreset, (err, result) => {
         fs.unlinkSync(path);
         data = result.secure_url;
+        console.log(data);
       });
       return data;
     };
 
-    const photo = await getUrl();
+    const image = await getUrl();
     const { email, password, role } = req.body;
     const findemail = await Users.findOne({ where: { email: email } });
     if (findemail) {
@@ -63,7 +62,7 @@ exports.createuser = async (req, res, next) => {
     // encrypt password
     const passwordHash = bcrypt.hashSync(password, 10);
     // insert data user
-    const user = await Users.create({ email, password: passwordHash, photo: photo, role });
+    const user = await Users.create({ email: email, password: passwordHash, photo: image, role });
     respone_ok_data(res, 'success created user', user);
   } catch (error) {
     // handle error upload in cloudinary
@@ -85,10 +84,10 @@ exports.createuser = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    const login = await Users.findOne({ where: { username: username } });
+    const { email, password } = req.body;
+    const login = await Users.findOne({ where: { email: email } });
     if (!login) {
-      return data_notfound(res, 'username not found');
+      return data_notfound(res, 'email not found');
     }
     const compare = bcrypt.compareSync(password, login.password);
     if (!compare) {

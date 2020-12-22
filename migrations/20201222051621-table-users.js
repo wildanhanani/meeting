@@ -21,17 +21,18 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      create_at: {
+      role: {
+        type: Sequelize.ENUM('admin', 'guest'),
+        defaultValue: 'guest',
+        allowNull: false,
+      },
+      createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      update_at: {
+      updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
-      },
-      delete_at: {
-        type: Sequelize.DATE,
-        allowNull: true,
       },
     });
   },

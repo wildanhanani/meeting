@@ -1,14 +1,17 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const route_user = require('./route/user_route');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // DB Connection
 require('./connection/connection');
-// DB Associations
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -19,4 +22,21 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use('/auth', route_user);
+
+app.use((req, res, next) => {
+  const error = new Error('not found');
+  error.status = 400;
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500).json({
+    status: error.status || 500,
+    error: error.message,
+  });
+});
+
 app.listen(PORT, console.log(`listening to PORT ${PORT}`));
+
+module.exports = app;
