@@ -6,6 +6,10 @@ const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 
+// DB Connection
+require('./connection/connection');
+// DB Associations
+
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 200,
