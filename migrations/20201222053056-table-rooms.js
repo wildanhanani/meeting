@@ -21,6 +21,9 @@ module.exports = {
         type: Sequelize.STRING,
         notNull: false,
       },
+      status: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

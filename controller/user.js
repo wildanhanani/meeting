@@ -5,11 +5,12 @@ const fs = require('fs');
 const pify = require('pify');
 const JWT = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const JWTsecret = process.env.JWT_KEY;
-const { data_notfound, validasi, authorized, respone_ok_data } = require('../helper/http_response');
+
 const Users = require('../models/Users');
+const { data_notfound, validasi, authorized, respone_ok_data } = require('../helper/http_response');
 
 dotenv.config();
+const JWTsecret = process.env.JWT_KEY;
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -48,12 +49,11 @@ exports.createuser = async (req, res, next) => {
       await cloudinary.uploader.unsigned_upload(path, uploadPreset, (err, result) => {
         fs.unlinkSync(path);
         data = result.secure_url;
-        console.log(data);
       });
       return data;
     };
 
-    const image = await getUrl();
+    const photo = await getUrl();
     const { email, password, role } = req.body;
     const findemail = await Users.findOne({ where: { email: email } });
     if (findemail) {
@@ -62,7 +62,7 @@ exports.createuser = async (req, res, next) => {
     // encrypt password
     const passwordHash = bcrypt.hashSync(password, 10);
     // insert data user
-    const user = await Users.create({ email: email, password: passwordHash, photo: image, role });
+    const user = await Users.create({ email: email, password: passwordHash, photo: photo, role });
     respone_ok_data(res, 'success created user', user);
   } catch (error) {
     // handle error upload in cloudinary
@@ -93,7 +93,7 @@ exports.login = async (req, res, next) => {
     if (!compare) {
       return validasi(res, 'password not match');
     }
-    const token = JWT.sign({ _id: login._id, role: login.role }, JWTsecret, { expiresIn: '24h' });
+    const token = JWT.sign({ id: login.id, role: login.role }, JWTsecret, { expiresIn: '24h' });
     respone_ok_data(res, 'succes login', token);
   } catch (error) {
     next(error);

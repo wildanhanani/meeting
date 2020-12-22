@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const route_user = require('./route/user_route');
+const route_user = require('./route/user_router');
+const route_room = require('./route/room_router');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,7 +23,8 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/auth', route_user);
+app.use('/api/auth', route_user);
+app.use('/api', route_room);
 
 app.use((req, res, next) => {
   const error = new Error('not found');
