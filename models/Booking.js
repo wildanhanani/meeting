@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../connection/connection');
-const room = require('../models/Room');
-const user = require('../models/Users');
+const room = require('./room');
+const user = require('./users');
 
-module.exports = sequelize.define('Booking', {
+module.exports = sequelize.define('booking', {
   user_id: {
     type: DataTypes.INTEGER,
     references: {
