@@ -4,7 +4,8 @@
     "password": "k2P76oQqd1XjaPObDU9N",
     "database": "b0xnhdpbdp8s3cmrg1wf",
     "host": "b0xnhdpbdp8s3cmrg1wf-mysql.services.clever-cloud.com",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "operatorsAliases": 0
   },
   "test": {
     "username": "root",
