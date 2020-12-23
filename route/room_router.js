@@ -5,6 +5,6 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 router.post('/room/create', auth.admin, roomController.createroom);
-router.get('/room/available-room', roomController.availableRoom);
+router.get('/room/available-room', auth.guest, roomController.availableRoom);
 
 module.exports = router;

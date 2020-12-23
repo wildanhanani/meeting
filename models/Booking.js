@@ -4,7 +4,7 @@ const room = require('../models/Room');
 const user = require('../models/Users');
 
 module.exports = sequelize.define('Booking', {
-  userId: {
+  user_id: {
     type: DataTypes.INTEGER,
     references: {
       model: user,
@@ -12,7 +12,7 @@ module.exports = sequelize.define('Booking', {
     },
     allowNull: false,
   },
-  roomId: {
+  room_id: {
     type: DataTypes.INTEGER,
     references: {
       model: room,

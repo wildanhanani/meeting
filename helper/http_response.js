@@ -5,6 +5,12 @@ exports.respone_ok_data = (res, msg, data) => {
     data: data,
   });
 };
+exports.respone_ok = (res, msg) => {
+  res.status(200).json({
+    status: 200,
+    message: msg,
+  });
+};
 
 // mengecek kebenaran data validasi
 exports.validasi = (res, msg) => {
