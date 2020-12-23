@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cron = require('node-cron');
 const route_user = require('./route/user_router');
 const route_room = require('./route/room_router');
 const route_booking = require('./route/booking_router');
@@ -14,6 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // DB Connection
 require('./connection/connection');
+
+cron.schedule('* * * * *', () => {
+  console.log('running a system');
+});
 
 app.get('/', (req, res) => {
   res.status(200).json({
