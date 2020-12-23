@@ -3,7 +3,7 @@ const sequelize = require('../connection/connection');
 const room = require('./Room');
 const user = require('./Users');
 
-module.exports = sequelize.define('Booking', {
+module.exports = sequelize.define('booking', {
   user_id: {
     type: DataTypes.INTEGER,
     references: {
